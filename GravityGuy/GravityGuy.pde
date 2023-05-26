@@ -2,6 +2,7 @@ PImage bg;
 GravityGuySprite sprites;
 PImage currentSprite;
 int spritePosX;
+int flipped;
 
 void setup() {
     size(637, 447);
@@ -16,27 +17,31 @@ void setup() {
 
     sprites = new GravityGuySprite(spritesArr);
 
-    spritePosX = 100;
+    flipped = 1;
+    spritePosX = 200;
 
     frameRate(30);  
 }
 
 void draw() {
-    background(bg);
+    continueBG(bg);
     fill(#262636);
     rect(0, 315, 637, 15);
 
     movement();
     
-    if(frameCount % 6 == 1) 
+    if(frameCount % 6 == 1) {
         currentSprite = sprites.getNext();
-    image(currentSprite, spritePosX, 250);    
+    }
+
+    image(currentSprite, spritePosX, 256);
 }
 
 void movement() {
     if(keyPressed && key == CODED) {
         if(keyCode == LEFT)
             spritePosX = max(spritePosX - 5, 0);
+            
         else if(keyCode == RIGHT)
             spritePosX = min(spritePosX + 5, width);
     }
