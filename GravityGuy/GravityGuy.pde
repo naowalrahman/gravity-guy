@@ -1,7 +1,7 @@
 PImage bg;
 GravityGuySprite sprites;
 PImage currentSprite;
-int spritePosX;
+int spritePosX, spritePosY;
 int flipped;
 
 void setup() {
@@ -19,6 +19,7 @@ void setup() {
 
     flipped = 1;
     spritePosX = 200;
+    spritePosY = 256;
 
     frameRate(30);  
 }
@@ -29,12 +30,9 @@ void draw() {
     rect(0, 315, 637, 15);
 
     movement();
-    
-    if(frameCount % 6 == 1) {
-        currentSprite = sprites.getNext();
-    }
 
-    image(currentSprite, spritePosX, 256);
+    spritePosY = sprites.drawSprite(spritePosX, spritePosY);
+
 }
 
 void movement() {

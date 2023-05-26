@@ -8,9 +8,8 @@ void continueBG(PImage img) {
         copy(img, 0, 0, img.width, height, x2, 0, img.width, height);
 }
 
-char SPACE = ' ';
-void flipOnSpace() {
-    if (keyPressed && key == SPACE) {
-        scale(1, -1);
-    }   
+void keyPressed() {
+  if(key == ' ') {
+    sprites.toggleFlipped();
+  }
 }
