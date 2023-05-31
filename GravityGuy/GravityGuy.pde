@@ -1,8 +1,8 @@
 PImage bg;
-GravityGuySprite sprites;
-PImage currentSprite;
+GravityGuySprites sprites;
+Sprite sprite;
 int spritePosX, spritePosY;
-int flipped;
+TouchableObject[] obstacles;
 
 void setup() {
     size(637, 447);
@@ -15,13 +15,21 @@ void setup() {
         spritesArr[i].resize(0, 80);
     }
 
-    sprites = new GravityGuySprite(spritesArr);
+    sprites = new GravityGuySprites(spritesArr);
 
-    flipped = 1;
     spritePosX = 200;
     spritePosY = 256;
 
+    reset();
+
     frameRate(30);  
+}
+
+void reset() {
+    sprite = new Sprite(spritePosX, spritePosY);
+    obstacles = new TouchableObject[] {
+        new TouchableObject(500, 294, 30, 30, #fae7b4)
+    };
 }
 
 void draw() {
@@ -29,18 +37,22 @@ void draw() {
     fill(#262636);
     rect(0, 315, 637, 15);
 
-    movement();
+    sprite.show();
+    if(sprite.x < 0) {
+        background(#000000);
+        fill(#ff0000);
+        textAlign(CENTER);
+        textSize(100);
+        text("You died!", width/2, height/2);
+        textSize(20);
+        text("Press R to restart", width/2, height/2 + 50);
+        return;
+    }
 
-    spritePosY = sprites.drawSprite(spritePosX, spritePosY);
-
-}
-
-void movement() {
-    if(keyPressed && key == CODED) {
-        if(keyCode == LEFT)
-            spritePosX = max(spritePosX - 5, 0);
-            
-        else if(keyCode == RIGHT)
-            spritePosX = min(spritePosX + 5, width);
+    for(int i = 0; i < obstacles.length; i++) {
+        obstacles[i].show();
+        if(sprite.isCollidingX(obstacles[i])) {
+            sprite.offset = Constants.obstacleSlideSpeed;
+        }
     }
 }
