@@ -12,9 +12,13 @@ void continueBG(PImage img) {
 
 void keyPressed() {
     if (key == ' ') {
+        if (sprite.stuckRightNow) {
+            sprite.xOffset = 0;
+            sprite.yOffset = Constants.gravity;
+            sprite.stuckRightNow = false;
+        }
         sprite.toggleFlipped();
-    }
-    else if (key == 'r' || key == 'R') {
+    } else if (key == 'r' || key == 'R') {
         reset();
     }
 }

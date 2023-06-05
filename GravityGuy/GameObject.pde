@@ -1,18 +1,18 @@
 public abstract class GameObject {
     public int x;
     public int y;
-    public int width;
-    public int height;
+    public int w;
+    public int h;
 
     public GameObject(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public GameObject(int x, int y, int width, int height) {
+    public GameObject(int x, int y, int w, int h) {
         this(x, y);
-        this.width = width;
-        this.height = height;
+        this.w = w;
+        this.h = h;
     }
 
     public abstract void show();
