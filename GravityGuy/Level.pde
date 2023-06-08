@@ -10,40 +10,40 @@ public class Level {
     }
 }
 
-public Level[] levels = new Level[] {
-    new Level(
+public Level getLevel1() {
+    return new Level(
         new TouchableObject[] {
             new TouchableObject(500, 294, 30, 30, #ffffff)
         },
         new TouchableObject[] {
-            new TouchableObject(0, 0, 1000, 300, #fae7b4),
-            new TouchableObject(0, 300, 1000, 300, #fae7b4)
+            new TouchableObject(0, 30, 600, 20, #00e7b4),
+            new TouchableObject(0, 300, 600, 20, #00e7b4)
 
         },
         new UntouchableObject[] {
             new UntouchableObject(600, 270, 30, #ffffff)
         }
-    ),
-    new Level(
-        new TouchableObject[] {
+    );
+}
 
+public Level getLevel2() {
+    return new Level(
+        new TouchableObject[] {
         },
         new TouchableObject[] {
-
-        },
-        new UntouchableObject[] {
-
-        }
-    ),
-    new Level(
-        new TouchableObject[] {
-
-        },
-        new TouchableObject[] {
-
         },
         new UntouchableObject[] {
-
         }
-    )
-};
+    );
+}
+
+public Level getLevel3() {
+    return new Level(
+        new TouchableObject[] {
+        },
+        new TouchableObject[] {
+        },
+        new UntouchableObject[] {
+        }
+    );
+}

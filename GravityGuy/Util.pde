@@ -11,14 +11,16 @@ void continueBG(PImage img) {
 }
 
 void keyPressed() {
-    if (key == ' ') {
-        if (sprite.stuckRightNow) {
-            sprite.xOffset = 0;
-            sprite.yOffset = Constants.gravity;
-            sprite.stuckRightNow = false;
-        }
+    if (key == ' ' && !dead) {
         sprite.toggleFlipped();
-    } else if (key == 'r' || key == 'R') {
+    } 
+
+    if (key == 'r' || key == 'R') {
+        dead = false;
         reset();
     }
+}
+
+boolean mouseOn(GameObject obj) {
+    return mouseX > obj.x && mouseX < obj.x + obj.w && mouseY > obj.y && mouseY < obj.y + obj.h;
 }

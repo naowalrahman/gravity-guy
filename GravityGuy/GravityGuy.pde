@@ -7,8 +7,10 @@ TouchableObject[] touchableObstacles;
 UntouchableObject[] untouchableObstacles;
 TouchableObject[] floors;
 
+boolean dead;
+
 // temporary
-int level = 0;
+int levelNum = 0;
 
 void setup() {
     size(637, 447);
@@ -16,25 +18,32 @@ void setup() {
 
     int spriteCount = 3;
     PImage[] spritesArr = new PImage[spriteCount];
+    PImage[] spritesFlippedArr = new PImage[spriteCount];
     for(int i = 0; i < spriteCount; i++) {
         spritesArr[i] = loadImage("./images/sprites/gg" + i + ".png");
+        spritesFlippedArr[i] = loadImage("./images/sprites/gg" + i + "_f.png");
+        
         spritesArr[i].resize(0, 80);
+        spritesFlippedArr[i].resize(0, 80);
     }
 
-    sprites = new GravityGuySprites(spritesArr);
+    sprites = new GravityGuySprites(spritesArr, spritesFlippedArr);
 
     spritePosX = 200;
-    spritePosY = 226;
+    spritePosY = 206;
 
+    dead = false;
     reset();
 
     frameRate(30);  
 }
 
 void reset() {
-    touchableObstacles = levels[level].touchableObstacles;
-    floors = levels[level].floors;
-    untouchableObstacles = levels[level].untouchableObstacles;
+    sprite = new Sprite(spritePosX, spritePosY);
+    Level level = getLevel1();
+    touchableObstacles = level.touchableObstacles;
+    floors = level.floors;
+    untouchableObstacles = level.untouchableObstacles;
 }
 
 void draw() {
@@ -42,6 +51,7 @@ void draw() {
     fill(#262636);
 
     if(sprite.x < 0 || sprite.y > height || sprite.y < 0) {
+        dead = true;
         background(#000000);
         fill(#ff0000);
         textAlign(CENTER);
@@ -51,8 +61,6 @@ void draw() {
         text("Press R to restart", width/2, height/2 + 50);
         return; 
     }
-
-
 
     boolean isCollidingFloor = false;
     for(int i = 0; i < floors.length; i++) {
@@ -67,25 +75,15 @@ void draw() {
     }
 
     boolean isCollidingObstacle = false;
-    boolean isStanding = false;
     for(int i = 0; i < touchableObstacles.length; i++) {
-        isCollidingObstacle |= sprite.isColliding(untouchableObstacles[i]);
-        isStanding |= sprite.isStanding(untouchableObstacles[i]);
+        isCollidingObstacle |= sprite.isColliding(touchableObstacles[i]);
         touchableObstacles[i].show();
                 
-        
         // collision logic goes here
     }
 
     if(isCollidingObstacle) {
-        if (isStanding) {
-            sprite.yOffset = 0;
-        }
-        else {
-            sprite.yOffset = Constants.gravity;
-        }
         sprite.xOffset = Constants.obstacleSlideSpeed;
-        sprite.stuckRightNow = true;
     } else {
         sprite.xOffset = 0;
     }

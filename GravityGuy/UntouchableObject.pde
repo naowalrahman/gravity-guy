@@ -1,6 +1,6 @@
 public class UntouchableObject extends GameObject {
     private int c;
-    public UntouchableObject(int x, int y, color c, int size) {
+    public UntouchableObject(int x, int y, int size, color c) {
         super(x, y, size, size);
         this.c = c;
     }
@@ -10,5 +10,6 @@ public class UntouchableObject extends GameObject {
         fill(c);
         int size = w;
         circle(x, y, size);
+        x -= Constants.obstacleSlideSpeed;
     }
 }
