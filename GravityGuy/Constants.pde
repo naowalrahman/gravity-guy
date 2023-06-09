@@ -1,4 +1,4 @@
 public interface Constants {
-    int obstacleSlideSpeed = 2;
-    int gravity = 3;
+    int obstacleSlideSpeed = 4;
+    int gravity = 5;
 }

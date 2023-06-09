@@ -1,4 +1,5 @@
 public class Sprite extends GameObject {
+    public int distanceTravelled = 0;
     private PImage currentSprite; 
     private boolean flipped;
     private String ext = "";
@@ -34,23 +35,21 @@ public class Sprite extends GameObject {
         image(currentSprite, x, y);
     }
 
-    // check if the sprite is colliding with another GameObject
     public boolean isColliding(GameObject other) {
-        // return (x + width > other.x && x < other.x + other.width && y + height > other.y && y < other.y + other.height);
         return isCollidingX(other) && isCollidingY(other);
     }
-    public boolean isStanding(GameObject other) {
-        return y + h > other.y; // only check after you know iscolliding is true
-    }
+
     public boolean isCollidingX(GameObject other) {
         return x + w > other.x && x < other.x + other.w;
-        // this is gravity guy
-        // return x > other.x && x < other.x + other.w || x + w > other.x && x + w < other.x + other.w;
     }
 
     public boolean isCollidingY(GameObject other) {
         return y + h > other.y && y < other.y + other.h;
-        // this is gravity guy
-        // return y > other.y && y < other.y + other.h || y + h > other.y && y + h < other.y + other.h;
+    }
+
+    public boolean isCollidingEllipse(UntouchableObject other) {
+        int ox = other.x - other.w/2;
+        int oy = other.y - other.h/2;
+        return x + w > ox && x < ox + other.w && y + h > oy && y < oy + other.h;
     }
 }
