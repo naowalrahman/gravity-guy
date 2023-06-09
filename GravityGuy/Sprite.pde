@@ -1,6 +1,8 @@
 public class Sprite extends GameObject {
+    public int distanceTravelled = 0;
     private PImage currentSprite; 
     private boolean flipped;
+    private String ext = "";
 
     public int xOffset;
     public int yOffset;
@@ -8,8 +10,8 @@ public class Sprite extends GameObject {
     boolean stuckRightNow = false;
     public Sprite(int x, int y) {
         super(x, y);
-        currentSprite = sprites.getNext(); // important for reset
         flipped = false;
+        currentSprite = sprites.getNext(flipped); // important for reset
         xOffset = 0;
         yOffset = 0;
     }
@@ -23,43 +25,31 @@ public class Sprite extends GameObject {
     @Override
     public void show() {
         if (frameCount % 6 == 0) {
-            currentSprite = sprites.getNext(); 
+            currentSprite = sprites.getNext(flipped); 
             w = currentSprite.width;
             h = currentSprite.height;
         }
 
         x -= xOffset;
-        
-        if (flipped) {
-            pushMatrix();
-            scale(1, -1);
-            image(currentSprite, x, -y - currentSprite.height);
-            popMatrix();
-            y -= yOffset;
-        }
-        else {
-            image(currentSprite, x, y);
-            y += yOffset;
-        }
+        y += (flipped ? -yOffset : yOffset);
+        image(currentSprite, x, y);
     }
 
-    // check if the sprite is colliding with another GameObject
     public boolean isColliding(GameObject other) {
-        // return (x + width > other.x && x < other.x + other.width && y + height > other.y && y < other.y + other.height);
         return isCollidingX(other) && isCollidingY(other);
     }
-    public boolean isStanding(GameObject other) {
-        return y + h > other.y; // only check after you know iscolliding is true
-    }
+
     public boolean isCollidingX(GameObject other) {
-       //naowal //return x + w > other.x && x < other.x + other.w;
-        // this is gravity guy
-        return x > other.x && x < other.x + other.w || x + w > other.x && x + w < other.x + other.w;
+        return x + w > other.x && x < other.x + other.w;
     }
 
     public boolean isCollidingY(GameObject other) {
-        // naowal // return y + h > other.y && y < other.y + other.h;
-        // this is gravity guy
-        return y > other.y && y < other.y + other.h || y + h > other.y && y + h < other.y + other.h;
+        return y + h > other.y && y < other.y + other.h;
+    }
+
+    public boolean isCollidingEllipse(UntouchableObject other) {
+        int ox = other.x - other.w/2;
+        int oy = other.y - other.h/2;
+        return x + w > ox && x < ox + other.w && y + h > oy && y < oy + other.h;
     }
 }

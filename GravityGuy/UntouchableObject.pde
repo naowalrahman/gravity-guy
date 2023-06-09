@@ -1,14 +1,16 @@
 public class UntouchableObject extends GameObject {
-    private int c;
-    public UntouchableObject(int x, int y, color c, int size) {
+    public UntouchableObject(int x, int y, int size) {
         super(x, y, size, size);
-        this.c = c;
+    }
+
+    public UntouchableObject(int x, int y, int w, int h) {
+        super(x, y, w, h);
     }
 
     @Override
     public void show() {
-        fill(c);
-        int size = w;
-        circle(x, y, size);
+        fill(#ff2474);
+        ellipse(x, y, w, h);
+        x -= Constants.obstacleSlideSpeed;
     }
 }

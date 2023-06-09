@@ -3,12 +3,17 @@ GravityGuySprites sprites;
 Sprite sprite;
 int spritePosX, spritePosY;
 
+Level[] levels;
 TouchableObject[] touchableObstacles;
 UntouchableObject[] untouchableObstacles;
 TouchableObject[] floors;
+int winX;
+
+boolean dead;
 
 // temporary
-int level = 0;
+int levelNum;
+int screenNum = 1; // 1 = welcome, 2 = level select, 3 = game
 
 void setup() {
     size(637, 447);
@@ -16,83 +21,66 @@ void setup() {
 
     int spriteCount = 3;
     PImage[] spritesArr = new PImage[spriteCount];
+    PImage[] spritesFlippedArr = new PImage[spriteCount];
     for(int i = 0; i < spriteCount; i++) {
         spritesArr[i] = loadImage("./images/sprites/gg" + i + ".png");
+        spritesFlippedArr[i] = loadImage("./images/sprites/gg" + i + "_f.png");
+        
         spritesArr[i].resize(0, 80);
+        spritesFlippedArr[i].resize(0, 80);
     }
 
-    sprites = new GravityGuySprites(spritesArr);
+    sprites = new GravityGuySprites(spritesArr, spritesFlippedArr);
 
     spritePosX = 200;
-    spritePosY = 226;
-
-    reset();
+    spritePosY = 206;
 
     frameRate(30);  
 }
 
 void reset() {
-    touchableObstacles = levels[level].touchableObstacles;
-    floors = levels[level].floors;
-    untouchableObstacles = levels[level].untouchableObstacles;
+    dead = false;
+    sprite = new Sprite(spritePosX, spritePosY);
+    Level level = (levelNum == 1 ? getLevel1() : (levelNum == 2 ? getLevel2() : getLevel3()));
+    touchableObstacles = level.touchableObstacles;
+    untouchableObstacles = level.untouchableObstacles;
+    floors = level.floors;
+    winX = level.winX;
 }
 
 void draw() {
-    continueBG(bg);
-    fill(#262636);
+    if(screenNum == 1) {
+        drawWelcomeScreen();
+    } else if(screenNum == 2) {
+        drawLevelSelectScreen();
+    } else if (screenNum == 3) {
+        continueBG(bg);
+        fill(#262636);
 
-    if(sprite.x < 0 || sprite.y > height || sprite.y < 0) {
-        background(#000000);
-        fill(#ff0000);
-        textAlign(CENTER);
-        textSize(100);
-        text("You died!", width/2, height/2);
-        textSize(20);
-        text("Press R to restart", width/2, height/2 + 50);
-        return; 
-    }
-
-
-
-    boolean isCollidingFloor = false;
-    for(int i = 0; i < floors.length; i++) {
-        isCollidingFloor |= sprite.isColliding(floors[i]);
-        floors[i].show();
-    }
-
-    if(isCollidingFloor) {
-        sprite.yOffset = 0;
-    } else {
-        sprite.yOffset = Constants.gravity;
-    }
-
-    boolean isCollidingObstacle = false;
-    boolean isStanding = false;
-    for(int i = 0; i < touchableObstacles.length; i++) {
-        isCollidingObstacle |= sprite.isColliding(untouchableObstacles[i]);
-        isStanding |= sprite.isStanding(untouchableObstacles[i]);
-        touchableObstacles[i].show();
-                
+        if(sprite.distanceTravelled > winX) {
+            screenNum = 4;
+        }
         
-        // collision logic goes here
-    }
-
-    if(isCollidingObstacle) {
-        if (isStanding) {
-            sprite.yOffset = 0;
+        if(dead) {
+            background(#000000);
+            fill(#ff0000);
+            textAlign(CENTER);
+            textSize(100);
+            text("You died!", width/2, height/2);
+            textSize(20);
+            text("Press R to restart", width/2, height/2 + 50);
+            return; 
         }
-        else {
-            sprite.yOffset = Constants.gravity;
+
+        if(sprite.x < 0 || sprite.y > height || sprite.y < 0) {
+            dead = true;
         }
-        sprite.xOffset = Constants.obstacleSlideSpeed;
-        sprite.stuckRightNow = true;
-    } else {
-        sprite.xOffset = 0;
-    }
 
-    for(int i = 0; i < untouchableObstacles.length; i++) {
-        untouchableObstacles[i].show();
-    }
+        checkCollisions();
 
-    sprite.show();
+        sprite.show();
+        sprite.distanceTravelled += Constants.obstacleSlideSpeed;
+    } else{ 
+        drawWinScreen();
+    }
 }
