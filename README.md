@@ -1,7 +1,3 @@
-# Final Project
+# Gravity Guy
 
-Final project for APCSA.
-
-## Gravity Guy
-
-This projects aims to create Gravity Guy using processing.
+This projects aims to create Gravity Guy using Processing in Java. There is level selection, collision detection, touchable and untouchable objects, and restarting capability.
